@@ -1,5 +1,7 @@
 import { Expense, ExpenseFilters } from './types';
 
+export type { Expense };
+
 // Helper to retrieve the bearer token (assumes it is stored in localStorage under 'auth_token')
 function getAuthToken(): string | null {
   try {
@@ -14,7 +16,7 @@ function authHeaders(): HeadersInit {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
+const API_BASE = (import.meta.env['VITE_API_BASE'] as string | undefined) ?? '/api';
 
 export async function fetchExpenses(filters: ExpenseFilters = {}): Promise<Expense[]> {
   const params = new URLSearchParams();

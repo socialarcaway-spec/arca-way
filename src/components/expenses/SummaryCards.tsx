@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { fetchExpenses, Expense } from '@/lib/api';
-import { ExpenseFilters } from '@/lib/types';
+import { fetchExpenses } from '@/lib/api';
+import { Expense, ExpenseFilters } from '@/lib/types';
 
 interface SummaryCardsProps {
   month: number;
@@ -11,9 +11,10 @@ interface SummaryCardsProps {
 
 export function SummaryCards({ month, year }: SummaryCardsProps) {
   const filters: ExpenseFilters = { month, year };
-  const { data: expenses = [], isLoading } = useQuery<Expense[]>(['expenses', month, year], () =>
-    fetchExpenses(filters),
-  );
+  const { data: expenses = [], isLoading } = useQuery<Expense[]>({
+    queryKey: ['expenses', month, year],
+    queryFn: () => fetchExpenses(filters),
+  });
 
   const summary = useMemo(() => {
     const total = expenses.reduce((sum, e) => sum + e.valor, 0);

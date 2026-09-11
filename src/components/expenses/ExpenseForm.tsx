@@ -13,10 +13,20 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ onClose }: ExpenseFormProps) {
+  const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const mutation = useMutation(createExpense, {
+  const mutation = useMutation({
+    mutationFn: createExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      setOpen(false);
+      setDescricao('');
+      setValor('');
+      setCategoria('');
+      setDataVencimento('');
+      setRecorrente(false);
+      setFrequencia('1');
+      setTotalParcelas('1');
       if (onClose) onClose();
     },
   });
@@ -31,27 +41,29 @@ export function ExpenseForm({ onClose }: ExpenseFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const valorNumber = parseFloat(valor.replace(',', '.')) * 100; // store as cents
+    const valorNumber = Math.round(parseFloat(valor.replace(',', '.')) * 100);
     const payload: Omit<Expense, 'id' | 'createdAt' | 'updatedAt'> = {
-      userId: 0, // backend will ignore / set from auth context
+      userId: 0,
       descricao,
       valor: valorNumber,
-      categoria,
+      categoria: categoria || 'Geral',
       dataVencimento,
       dataPagamento: null,
       status: 'Pendente',
-      recorrente: recorrente ? true : undefined,
-      frequencia: recorrente ? parseInt(frequencia) : undefined,
       parcelaNumero: 1,
-      totalParcelas: recorrente ? parseInt(totalParcelas) : undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      ...(recorrente
+        ? {
+            recorrente: true,
+            frequencia: parseInt(frequencia),
+            totalParcelas: parseInt(totalParcelas),
+          }
+        : {}),
     };
-    mutation.mutate(payload as any);
+    mutation.mutate(payload);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default">Nova despesa</Button>
       </DialogTrigger>
@@ -105,7 +117,7 @@ export function ExpenseForm({ onClose }: ExpenseFormProps) {
             </>
           )}
           <DialogFooter>
-            <Button type="submit" disabled={mutation.isLoading}>Salvar</Button>
+            <Button type="submit" disabled={mutation.isPending}>Salvar</Button>
           </DialogFooter>
         </form>
       </DialogContent>

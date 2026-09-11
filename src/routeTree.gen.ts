@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartoesRouteImport } from './routes/cartoes'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContasRouteImport } from './routes/contas'
+import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as FluxoRouteImport } from './routes/fluxo'
 import { Route as InvestimentosRouteImport } from './routes/investimentos'
 import { Route as MetasRouteImport } from './routes/metas'
@@ -37,6 +38,11 @@ const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
 const ContasRoute = ContasRouteImport.update({
   id: '/contas',
   path: '/contas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespesasRoute = DespesasRouteImport.update({
+  id: '/despesas',
+  path: '/despesas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FluxoRoute = FluxoRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   CartoesRoute: typeof CartoesRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContasRoute: typeof ContasRoute
+  DespesasRoute: typeof DespesasRoute
   FluxoRoute: typeof FluxoRoute
   InvestimentosRoute: typeof InvestimentosRoute
   MetasRoute: typeof MetasRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/contas'
       fullPath: '/contas'
       preLoaderRoute: typeof ContasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despesas': {
+      id: '/despesas'
+      path: '/despesas'
+      fullPath: '/despesas'
+      preLoaderRoute: typeof DespesasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fluxo': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartoesRoute: CartoesRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContasRoute: ContasRoute,
+  DespesasRoute: DespesasRoute,
   FluxoRoute: FluxoRoute,
   InvestimentosRoute: InvestimentosRoute,
   MetasRoute: MetasRoute,
