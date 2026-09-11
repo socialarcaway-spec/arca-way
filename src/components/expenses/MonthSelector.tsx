@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface MonthSelectorProps {
   month: number;
@@ -31,7 +31,7 @@ export function MonthSelector({ month, year, onChange }: MonthSelectorProps) {
       </Button>
       <div className="relative">
         <Button variant="outline" onClick={() => setOpen(!open)}>
-          {selectedDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+          {selectedDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
         </Button>
         {open && (
           <div className="absolute left-0 top-10 z-10">

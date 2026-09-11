@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { PageShell } from '@/components/PageShell';
-import { ExpenseForm } from '@/components/expenses/ExpenseForm';
-import { SummaryCards } from '@/components/expenses/SummaryCards';
-import { ExpenseList } from '@/components/expenses/ExpenseList';
-import { MonthSelector } from '@/components/expenses/MonthSelector';
-import { ExpenseChart } from '@/components/expenses/ExpenseChart';
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { PageShell } from "@/components/PageShell";
+import { ExpenseForm } from "@/components/expenses/ExpenseForm";
+import { SummaryCards } from "@/components/expenses/SummaryCards";
+import { ExpenseList } from "@/components/expenses/ExpenseList";
+import { MonthSelector } from "@/components/expenses/MonthSelector";
+import { ExpenseChart } from "@/components/expenses/ExpenseChart";
 
-export const Route = createFileRoute('/despesas')({
+export const Route = createFileRoute("/despesas")({
   head: () => ({
     meta: [
-      { title: 'Despesas | Painel financeiro' },
-      { name: 'description', content: 'Acompanhe e organize suas despesas pessoais.' },
-      { property: 'og:title', content: 'Despesas | Painel financeiro' },
-      { property: 'og:description', content: 'Acompanhe e organize suas despesas pessoais.' },
-      { property: 'og:type', content: 'website' },
-      { name: 'twitter:card', content: 'summary_large_image' },
+      { title: "Despesas | Painel financeiro" },
+      { name: "description", content: "Acompanhe e organize suas despesas pessoais." },
+      { property: "og:title", content: "Despesas | Painel financeiro" },
+      { property: "og:description", content: "Acompanhe e organize suas despesas pessoais." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Page,

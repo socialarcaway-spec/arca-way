@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
   TableHeader,
@@ -7,20 +7,20 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { fetchExpenses, updateExpense, deleteExpense } from '@/lib/api';
-import { Expense, ExpenseFilters, ExpenseStatus } from '@/lib/types';
-import { Search, MoreHorizontal, CheckCircle2, Trash2 } from 'lucide-react';
+} from "@/components/ui/dropdown-menu";
+import { fetchExpenses, updateExpense, deleteExpense } from "@/lib/api";
+import { Expense, ExpenseFilters, ExpenseStatus } from "@/lib/types";
+import { Search, MoreHorizontal, CheckCircle2, Trash2 } from "lucide-react";
 
 interface ExpenseListProps {
   month: number;
@@ -28,43 +28,43 @@ interface ExpenseListProps {
 }
 
 export function ExpenseList({ month, year }: ExpenseListProps) {
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('TODOS');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("TODOS");
   const queryClient = useQueryClient();
 
   const filters: ExpenseFilters = { month, year };
   const { data: expenses = [], isLoading } = useQuery<Expense[]>({
-    queryKey: ['expenses', month, year],
+    queryKey: ["expenses", month, year],
     queryFn: () => fetchExpenses(filters),
   });
 
   const markAsPaidMutation = useMutation({
     mutationFn: (id: number) =>
       updateExpense(id, {
-        status: 'Pago',
+        status: "Pago",
         dataPagamento: new Date().toISOString(),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteExpense(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
     },
   });
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
       const matchSearch =
-        search === '' ||
+        search === "" ||
         e.descricao.toLowerCase().includes(search.toLowerCase()) ||
         e.categoria.toLowerCase().includes(search.toLowerCase());
 
       const matchStatus =
-        statusFilter === 'TODOS' || (e.status && e.status.toUpperCase() === statusFilter);
+        statusFilter === "TODOS" || (e.status && e.status.toUpperCase() === statusFilter);
 
       return matchSearch && matchStatus;
     });
@@ -72,12 +72,24 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
 
   const getStatusBadge = (status: ExpenseStatus) => {
     switch (status) {
-      case 'Pago':
-        return <Badge className="bg-green-500/15 text-green-600 dark:text-green-400 hover:bg-green-500/20 border-0">Pago</Badge>;
-      case 'Pendente':
-        return <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 border-0">Pendente</Badge>;
-      case 'Atrasado':
-        return <Badge className="bg-red-500/15 text-red-600 dark:text-red-400 hover:bg-red-500/20 border-0">Atrasado</Badge>;
+      case "Pago":
+        return (
+          <Badge className="bg-green-500/15 text-green-600 dark:text-green-400 hover:bg-green-500/20 border-0">
+            Pago
+          </Badge>
+        );
+      case "Pendente":
+        return (
+          <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 border-0">
+            Pendente
+          </Badge>
+        );
+      case "Atrasado":
+        return (
+          <Badge className="bg-red-500/15 text-red-600 dark:text-red-400 hover:bg-red-500/20 border-0">
+            Atrasado
+          </Badge>
+        );
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -85,18 +97,18 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
 
   const formatCurrency = (valCents: number) => {
     const val = valCents / 100;
-    return `R$ ${val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `R$ ${val.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return '-';
+    if (!dateStr) return "-";
     try {
-      const datePart = dateStr.split('T')[0] ?? '';
-      const parts = datePart.split('-');
+      const datePart = dateStr.split("T")[0] ?? "";
+      const parts = datePart.split("-");
       if (parts.length === 3) {
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
       }
-      return new Date(dateStr).toLocaleDateString('pt-BR');
+      return new Date(dateStr).toLocaleDateString("pt-BR");
     } catch {
       return dateStr;
     }
@@ -105,9 +117,7 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
   return (
     <Card className="mt-4 border-border bg-card">
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4">
-        <CardTitle className="text-lg font-semibold text-foreground">
-          Lista de Despesas
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold text-foreground">Lista de Despesas</CardTitle>
         <div className="flex flex-wrap items-center gap-2">
           {/* Search Input */}
           <div className="relative w-full sm:w-64">
@@ -121,15 +131,15 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
           </div>
           {/* Status Filter Buttons */}
           <div className="flex items-center gap-1 rounded-lg border border-border bg-background p-1">
-            {['TODOS', 'PENDENTE', 'PAGO'].map((st) => (
+            {["TODOS", "PENDENTE", "PAGO"].map((st) => (
               <Button
                 key={st}
-                variant={statusFilter === st ? 'default' : 'ghost'}
+                variant={statusFilter === st ? "default" : "ghost"}
                 size="sm"
                 className="h-7 text-xs px-2.5"
                 onClick={() => setStatusFilter(st)}
               >
-                {st === 'TODOS' ? 'Todos' : st === 'PENDENTE' ? 'Pendentes' : 'Pagos'}
+                {st === "TODOS" ? "Todos" : st === "PENDENTE" ? "Pendentes" : "Pagos"}
               </Button>
             ))}
           </div>
@@ -176,7 +186,7 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
                       </TableCell>
                       <TableCell className="text-muted-foreground">{item.categoria}</TableCell>
                       <TableCell>{formatDate(item.dataVencimento)}</TableCell>
-                      <TableCell>{formatDate(item.dataPagamento || '')}</TableCell>
+                      <TableCell>{formatDate(item.dataPagamento || "")}</TableCell>
                       <TableCell className="font-semibold text-foreground">
                         {formatCurrency(item.valor)}
                       </TableCell>
@@ -189,10 +199,8 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            {item.status !== 'Pago' && (
-                              <DropdownMenuItem
-                                onClick={() => markAsPaidMutation.mutate(item.id)}
-                              >
+                            {item.status !== "Pago" && (
+                              <DropdownMenuItem onClick={() => markAsPaidMutation.mutate(item.id)}>
                                 <CheckCircle2 className="mr-2 size-4 text-green-500" />
                                 Marcar como pago
                               </DropdownMenuItem>
@@ -249,7 +257,7 @@ export function ExpenseList({ month, year }: ExpenseListProps) {
                   </div>
 
                   <div className="flex items-center justify-end gap-2 pt-1">
-                    {item.status !== 'Pago' && (
+                    {item.status !== "Pago" && (
                       <Button
                         variant="outline"
                         size="sm"
