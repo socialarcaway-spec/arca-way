@@ -1,0 +1,159 @@
+/* src/styles/design-system.css */
+/* --------------------------------------------------- */
+/* Design System – Vanilla CSS
+   Implements the visual language defined in the UI redesign plan.
+   Imported by components that need the variables.
+*/
+
+:root {
+  /* Colors – Light theme */
+  --color-bg: #F7F8FA;            /* Main background */
+  --color-bg-card: #FFFFFF;       /* Card surface */
+  --color-text-primary: #111827; /* Primary text */
+  --color-text-secondary: #667085;/* Secondary text */
+  --color-border: #E5E7EB;        /* Light borders */
+  --color-accent: #2563EB;        /* Primary accent – from existing theme */
+  --color-success: #10B981;       /* Subtle green for income */
+  --color-error: #EF4444;         /* Subtle red for expense */
+  --color-warning: #F59E0B;       /* Orange for alerts */
+
+  /* Radii */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px */
+  --radius-lg: 1rem;     /* 16px */
+
+  /* Spacing */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem;  /* 8px */
+  --spacing-md: 1rem;    /* 16px */
+  --spacing-lg: 1.5rem;  /* 24px */
+  --spacing-xl: 2rem;    /* 32px */
+
+  /* Typography */
+  --font-primary: 'Inter', sans-serif;
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-lg: 1rem;       /* 16px */
+  --font-size-xl: 1.125rem;   /* 18px */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+}
+
+/* Dark mode – respects system preference but can be overridden */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0F111A;            /* Dark background */
+    --color-bg-card: #1E222A;       /* Slightly lighter card */
+    --color-text-primary: #E5E7EB;
+    --color-text-secondary: #9CA3AF;
+    --color-border: #2D3540;
+    /* Accent stays the same to keep brand consistency */
+    --color-accent: #2563EB;
+    --color-success: #10B981;
+    --color-error: #EF4444;
+    --color-warning: #F59E0B;
+  }
+}
+
+/* Utility classes – minimal set mirroring Tailwind naming */
+/* Layout */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--spacing-xs); }
+.gap-2 { gap: var(--spacing-sm); }
+.gap-3 { gap: var(--spacing-md); }
+.gap-4 { gap: var(--spacing-lg); }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.w-16 { width: 4rem; }
+.w-64 { width: 16rem; }
+.max-w-2xl { max-width: 42rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.p-2 { padding: var(--spacing-xs); }
+.p-3 { padding: var(--spacing-sm); }
+.p-4 { padding: var(--spacing-md); }
+.px-3 { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+.py-2 { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+
+/* Typography */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: var(--font-size-base); }
+.text-base { font-size: var(--font-size-lg); }
+.text-lg { font-size: var(--font-size-xl); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: 700; }
+.text-primary { color: var(--color-accent); }
+.text-muted { color: var(--color-text-secondary); }
+.text-foreground { color: var(--color-text-primary); }
+
+/* Colors / Backgrounds */
+.bg-primary-soft { background-color: #E0EEFF; }
+.bg-card { background-color: var(--color-bg-card); }
+.bg-primary { background-color: var(--color-accent); }
+.bg-success { background-color: var(--color-success); }
+.bg-error { background-color: var(--color-error); }
+.bg-warning { background-color: var(--color-warning); }
+.bg-secondary { background-color: var(--color-border); }
+
+/* Borders & radius */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.border { border-width: 1px; border-style: solid; border-color: var(--color-border); }
+
+/* Shadows – subtle */
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.shadow-xs { box-shadow: 0 1px 1px rgba(0,0,0,0.04); }
+
+/* Transitions */
+.transition-colors { transition: color 0.15s ease, background-color 0.15s ease; }
+.transition-width { transition: width 0.2s ease; }
+
+/* Hover states – use the same utilities */
+.hover\:bg-secondary:hover { background-color: var(--color-border); }
+.hover\:text-foreground:hover { color: var(--color-text-primary); }
+.hover\:bg-primary-soft:hover { background-color: var(--color-accent); opacity: 0.1; }
+
+/* Focus outline for accessibility */
+.focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* Tooltip – simple CSS only */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* Responsive breakpoints (mobile first) */
+@media (min-width: 640px) { /* sm */
+  .sm\:grid-cols-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 768px) { /* md */
+  .md\:grid-cols-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) { /* lg */
+  .lg\:grid-cols-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
