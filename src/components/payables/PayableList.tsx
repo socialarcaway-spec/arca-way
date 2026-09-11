@@ -593,6 +593,7 @@ export function PayableList({
           payableToEdit={editingPayable}
           open={Boolean(editingPayable)}
           onOpenChange={(open) => !open && setEditingPayable(null)}
+          triggerButton={null}
         />
       )}
 

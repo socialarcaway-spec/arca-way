@@ -192,11 +192,13 @@ export function PayableForm({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {triggerButton ? (
-        <DialogTrigger asChild>{triggerButton}</DialogTrigger>
-      ) : !isControlled ? (
+      {triggerButton !== undefined ? (
+        triggerButton ? (
+          <DialogTrigger asChild>{triggerButton}</DialogTrigger>
+        ) : null
+      ) : !payableToEdit ? (
         <DialogTrigger asChild>
-          <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold h-9 px-4 rounded-xl shadow-xs">
+          <Button className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold h-9 px-4 rounded-xl shadow-xs">
             <PlusCircle className="size-4" />
             Nova conta
           </Button>

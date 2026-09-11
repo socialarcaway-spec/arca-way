@@ -13,12 +13,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartoesRouteImport } from './routes/cartoes'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContasRouteImport } from './routes/contas'
+import { Route as ContasAPagarRouteImport } from './routes/contas-a-pagar'
 import { Route as ContasAReceberRouteImport } from './routes/contas-a-receber'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as FluxoRouteImport } from './routes/fluxo'
 import { Route as InvestimentosRouteImport } from './routes/investimentos'
 import { Route as MetasRouteImport } from './routes/metas'
 import { Route as MovimentacoesRouteImport } from './routes/movimentacoes'
+import { Route as ReceitasRouteImport } from './routes/receitas'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 
 const IndexRoute = IndexRouteImport.update({
@@ -39,6 +41,11 @@ const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
 const ContasRoute = ContasRouteImport.update({
   id: '/contas',
   path: '/contas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContasAPagarRoute = ContasAPagarRouteImport.update({
+  id: '/contas-a-pagar',
+  path: '/contas-a-pagar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContasAReceberRoute = ContasAReceberRouteImport.update({
@@ -71,6 +78,11 @@ const MovimentacoesRoute = MovimentacoesRouteImport.update({
   path: '/movimentacoes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceitasRoute = ReceitasRouteImport.update({
+  id: '/receitas',
+  path: '/receitas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RelatoriosRoute = RelatoriosRouteImport.update({
   id: '/relatorios',
   path: '/relatorios',
@@ -82,12 +94,14 @@ export interface FileRoutesByFullPath {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-pagar': typeof ContasAPagarRoute
   '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
   '/movimentacoes': typeof MovimentacoesRoute
+  '/receitas': typeof ReceitasRoute
   '/relatorios': typeof RelatoriosRoute
 }
 export interface FileRoutesByTo {
@@ -95,12 +109,14 @@ export interface FileRoutesByTo {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-pagar': typeof ContasAPagarRoute
   '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
   '/movimentacoes': typeof MovimentacoesRoute
+  '/receitas': typeof ReceitasRoute
   '/relatorios': typeof RelatoriosRoute
 }
 export interface FileRoutesById {
@@ -109,12 +125,14 @@ export interface FileRoutesById {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-pagar': typeof ContasAPagarRoute
   '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
   '/metas': typeof MetasRoute
   '/movimentacoes': typeof MovimentacoesRoute
+  '/receitas': typeof ReceitasRoute
   '/relatorios': typeof RelatoriosRoute
 }
 export interface FileRouteTypes {
@@ -124,12 +142,14 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-pagar'
     | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
     | '/movimentacoes'
+    | '/receitas'
     | '/relatorios'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -137,12 +157,14 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-pagar'
     | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
     | '/movimentacoes'
+    | '/receitas'
     | '/relatorios'
   id:
     | '__root__'
@@ -150,12 +172,14 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-pagar'
     | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
     | '/metas'
     | '/movimentacoes'
+    | '/receitas'
     | '/relatorios'
   fileRoutesById: FileRoutesById
 }
@@ -164,12 +188,14 @@ export interface RootRouteChildren {
   CartoesRoute: typeof CartoesRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContasRoute: typeof ContasRoute
+  ContasAPagarRoute: typeof ContasAPagarRoute
   ContasAReceberRoute: typeof ContasAReceberRoute
   DespesasRoute: typeof DespesasRoute
   FluxoRoute: typeof FluxoRoute
   InvestimentosRoute: typeof InvestimentosRoute
   MetasRoute: typeof MetasRoute
   MovimentacoesRoute: typeof MovimentacoesRoute
+  ReceitasRoute: typeof ReceitasRoute
   RelatoriosRoute: typeof RelatoriosRoute
 }
 
@@ -201,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/contas'
       fullPath: '/contas'
       preLoaderRoute: typeof ContasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contas-a-pagar': {
+      id: '/contas-a-pagar'
+      path: '/contas-a-pagar'
+      fullPath: '/contas-a-pagar'
+      preLoaderRoute: typeof ContasAPagarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contas-a-receber': {
@@ -245,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MovimentacoesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/receitas': {
+      id: '/receitas'
+      path: '/receitas'
+      fullPath: '/receitas'
+      preLoaderRoute: typeof ReceitasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/relatorios': {
       id: '/relatorios'
       path: '/relatorios'
@@ -260,12 +300,14 @@ const rootRouteChildren: RootRouteChildren = {
   CartoesRoute: CartoesRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContasRoute: ContasRoute,
+  ContasAPagarRoute: ContasAPagarRoute,
   ContasAReceberRoute: ContasAReceberRoute,
   DespesasRoute: DespesasRoute,
   FluxoRoute: FluxoRoute,
   InvestimentosRoute: InvestimentosRoute,
   MetasRoute: MetasRoute,
   MovimentacoesRoute: MovimentacoesRoute,
+  ReceitasRoute: ReceitasRoute,
   RelatoriosRoute: RelatoriosRoute,
 }
 export const routeTree = rootRouteImport
