@@ -12,15 +12,34 @@ export type PayablePaymentMethod =
 
 export type PayableCategory =
   | 'Moradia'
-  | 'Alimentação'
-  | 'Transporte'
-  | 'Saúde'
-  | 'Educação'
-  | 'Lazer'
+  | 'Energia'
+  | 'Água'
+  | 'Internet'
+  | 'Telefone'
+  | 'Financiamento'
+  | 'Empréstimo'
+  | 'Cartão'
   | 'Assinaturas'
-  | 'Serviços'
-  | 'Impostos'
+  | 'Educação'
+  | 'Seguro'
   | 'Outros';
+
+export const PAYABLE_CATEGORIES: PayableCategory[] = [
+  'Moradia',
+  'Energia',
+  'Água',
+  'Internet',
+  'Telefone',
+  'Financiamento',
+  'Empréstimo',
+  'Cartão',
+  'Assinaturas',
+  'Educação',
+  'Seguro',
+  'Outros',
+];
+
+export type AccountType = 'unica' | 'recorrente' | 'parcelada';
 
 export type RecurrenceFrequency = 'Semanal' | 'Quinzenal' | 'Mensal' | 'Anual';
 
@@ -46,12 +65,30 @@ export interface Payable {
   updatedAt: string;
 }
 
-export type PayableSortBy = 'vencimento' | 'descricao' | 'valor' | 'categoria' | 'status' | 'formaPagamento';
+export type PayableSortBy =
+  | 'vencimento'
+  | 'vencimento_desc'
+  | 'valor_desc'
+  | 'valor_asc'
+  | 'descricao'
+  | 'recentes'
+  | 'antigas'
+  | 'vencidas_primeiro';
+
 export type SortOrder = 'asc' | 'desc';
+
+export type PayableQuickFilter =
+  | 'Todas'
+  | 'Pendentes'
+  | 'Pagas'
+  | 'Vencidas'
+  | 'Recorrentes'
+  | 'Parceladas';
 
 export interface PayableFilters {
   month?: number; // 1-12
   year?: number;
+  quickFilter?: PayableQuickFilter;
   status?: PayableStatus | 'Todos';
   categoria?: string;
   formaPagamento?: string;
@@ -64,7 +101,7 @@ export interface PayableFilters {
 
 export interface PayableFormData {
   descricao: string;
-  valor: number; // in cents
+  valor: number; // in cents (if parcelado, total purchase amount)
   valorPago?: number;
   categoria: string;
   dataVencimento: string;
@@ -72,6 +109,7 @@ export interface PayableFormData {
   formaPagamento: string;
   status: PayableStatus;
   observacao?: string;
+  accountType?: AccountType;
   recorrente?: boolean;
   frequenciaRecorrencia?: RecurrenceFrequency;
   parcelado?: boolean;

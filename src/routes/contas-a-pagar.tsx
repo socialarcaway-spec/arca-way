@@ -13,15 +13,15 @@ import { PayableFilters as FiltersType } from '@/lib/payable-types';
 export const Route = createFileRoute('/contas-a-pagar')({
   head: () => ({
     meta: [
-      { title: 'Contas a Pagar | Painel Financeiro' },
+      { title: 'Contas Mensais | Painel Financeiro' },
       {
         name: 'description',
-        content: 'Organize seus compromissos e acompanhe tudo o que ainda precisa ser pago.',
+        content: 'Organize seus compromissos financeiros do mês.',
       },
-      { property: 'og:title', content: 'Contas a Pagar | Painel Financeiro' },
+      { property: 'og:title', content: 'Contas Mensais | Painel Financeiro' },
       {
         property: 'og:description',
-        content: 'Organize seus compromissos e acompanhe tudo o que ainda precisa ser pago.',
+        content: 'Organize seus compromissos financeiros do mês.',
       },
       { property: 'og:type', content: 'website' },
       { name: 'twitter:card', content: 'summary_large_image' },
@@ -37,6 +37,7 @@ function Page() {
 
   const [filters, setFilters] = useState<FiltersType>({
     status: 'Todos',
+    quickFilter: 'Todas',
     sortBy: 'vencimento',
     sortOrder: 'asc',
   });
@@ -59,8 +60,8 @@ function Page() {
 
   return (
     <PageShell
-      title="Contas a Pagar"
-      subtitle="Organize seus compromissos e acompanhe tudo o que ainda precisa ser pago."
+      title="Contas Mensais"
+      subtitle="Organize seus compromissos financeiros do mês."
     >
       <div className="flex flex-col gap-6">
         {/* Controls Bar */}

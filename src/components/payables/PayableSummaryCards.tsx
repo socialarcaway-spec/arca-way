@@ -86,7 +86,7 @@ export function PayableSummaryCards({ summary, isLoading }: PayableSummaryCardsP
       valueColor: 'text-rose-600 dark:text-rose-400',
     },
     {
-      title: 'QUANTIDADE',
+      title: 'QUANTIDADE DE CONTAS',
       value: `${data.countTotal} contas`,
       subtext: `${data.countPago} pagas · ${data.countPendente + data.countAtrasado} em aberto`,
       icon: Receipt,

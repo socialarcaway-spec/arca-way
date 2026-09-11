@@ -7,8 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PayableFilters as FiltersType, PayableStatus } from '@/lib/payable-types';
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import {
+  PayableFilters as FiltersType,
+  PayableQuickFilter,
+  PayableSortBy,
+  PAYABLE_CATEGORIES,
+} from '@/lib/payable-types';
+import { Search, X, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
 
 interface PayableFiltersProps {
@@ -16,41 +21,45 @@ interface PayableFiltersProps {
   onChange: (filters: FiltersType) => void;
 }
 
-const CATEGORIES = [
+const QUICK_TABS: PayableQuickFilter[] = [
   'Todas',
-  'Moradia',
-  'Alimentação',
-  'Transporte',
-  'Saúde',
-  'Educação',
-  'Lazer',
-  'Assinaturas',
-  'Serviços',
-  'Impostos',
-  'Outros',
+  'Pendentes',
+  'Pagas',
+  'Vencidas',
+  'Recorrentes',
+  'Parceladas',
 ];
 
-const STATUS_OPTIONS: { label: string; value: PayableStatus | 'Todos' }[] = [
-  { label: 'Todos', value: 'Todos' },
-  { label: 'Pendentes', value: 'Pendente' },
-  { label: 'Pagos', value: 'Pago' },
-  { label: 'Atrasados', value: 'Atrasado' },
+const SORT_OPTIONS: { label: string; value: PayableSortBy }[] = [
+  { label: 'Vencimento mais próximo', value: 'vencimento' },
+  { label: 'Vencimento mais distante', value: 'vencimento_desc' },
+  { label: 'Maior valor', value: 'valor_desc' },
+  { label: 'Menor valor', value: 'valor_asc' },
+  { label: 'Mais recentes', value: 'recentes' },
+  { label: 'Mais antigas', value: 'antigas' },
+  { label: 'Vencidas primeiro', value: 'vencidas_primeiro' },
+  { label: 'Nome (A-Z)', value: 'descricao' },
 ];
 
 export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  const currentQuick = filters.quickFilter || 'Todas';
+
+  const handleQuickTabClick = (tab: PayableQuickFilter) => {
+    onChange({
+      ...filters,
+      quickFilter: tab,
+      status: 'Todos',
+      recorrente: undefined,
+      parcelado: undefined,
+    });
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...filters,
       search: e.target.value,
-    });
-  };
-
-  const handleStatusClick = (status: PayableStatus | 'Todos') => {
-    onChange({
-      ...filters,
-      status,
     });
   };
 
@@ -61,10 +70,25 @@ export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
     });
   };
 
+  const handlePaymentMethodChange = (val: string) => {
+    onChange({
+      ...filters,
+      formaPagamento: val === 'Todas' ? undefined : val,
+    });
+  };
+
+  const handleSortChange = (val: PayableSortBy) => {
+    onChange({
+      ...filters,
+      sortBy: val,
+    });
+  };
+
   const clearFilters = () => {
     onChange({
       month: filters.month,
       year: filters.year,
+      quickFilter: 'Todas',
       status: 'Todos',
       categoria: undefined,
       formaPagamento: undefined,
@@ -77,43 +101,41 @@ export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
   };
 
   const hasActiveFilters =
-    (filters.status && filters.status !== 'Todos') ||
+    (filters.quickFilter && filters.quickFilter !== 'Todas') ||
     filters.categoria ||
     filters.formaPagamento ||
-    filters.recorrente !== undefined ||
-    filters.parcelado !== undefined ||
     (filters.search && filters.search.trim() !== '');
 
   return (
-    <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        {/* Status quick tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-secondary/50 border border-border/40">
-          {STATUS_OPTIONS.map((opt) => {
-            const active = (filters.status || 'Todos') === opt.value;
+    <div className="space-y-3 rounded-2xl border border-border bg-card p-3 sm:p-4 shadow-xs">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        {/* Quick Tabs: Todas, Pendentes, Pagas, Vencidas, Recorrentes, Parceladas */}
+        <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-secondary/50 border border-border/40 overflow-x-auto">
+          {QUICK_TABS.map((tab) => {
+            const active = currentQuick === tab;
             return (
               <button
-                key={opt.value}
+                key={tab}
                 type="button"
-                onClick={() => handleStatusClick(opt.value)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                onClick={() => handleQuickTabClick(tab)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 ${
                   active
                     ? 'bg-card text-foreground shadow-xs font-semibold'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {opt.label}
+                {tab}
               </button>
             );
           })}
         </div>
 
-        {/* Search & Toggle Advanced */}
-        <div className="flex items-center gap-2 flex-1 md:max-w-md">
+        {/* Search & Actions */}
+        <div className="flex items-center gap-2 flex-1 lg:max-w-md">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
             <Input
-              placeholder="Buscar conta por descrição, categoria..."
+              placeholder="Buscar conta por nome, categoria ou observação..."
               value={filters.search || ''}
               onChange={handleSearchChange}
               className="pl-9 pr-8 bg-background border-border text-foreground text-xs h-9"
@@ -134,7 +156,9 @@ export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
             variant="outline"
             size="sm"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className={`h-9 gap-1.5 border-border text-xs ${showAdvanced ? 'bg-secondary text-primary' : 'text-foreground'}`}
+            className={`h-9 gap-1.5 border-border text-xs ${
+              showAdvanced ? 'bg-secondary text-primary' : 'text-foreground'
+            }`}
           >
             <SlidersHorizontal className="size-3.5" />
             <span className="hidden sm:inline">Filtros</span>
@@ -167,10 +191,13 @@ export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
               onValueChange={handleCategoryChange}
             >
               <SelectTrigger className="h-8 text-xs bg-background border-border text-foreground">
-                <SelectValue placeholder="Todas" />
+                <SelectValue placeholder="Todas as categorias" />
               </SelectTrigger>
-              <SelectContent className="bg-popover border-border">
-                {CATEGORIES.map((cat) => (
+              <SelectContent className="bg-popover border-border max-h-52">
+                <SelectItem value="Todas" className="text-xs">
+                  Todas as Categorias
+                </SelectItem>
+                {PAYABLE_CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat} className="text-xs">
                     {cat}
                   </SelectItem>
@@ -181,58 +208,48 @@ export function PayableFilters({ filters, onChange }: PayableFiltersProps) {
 
           <div>
             <span className="text-[11px] font-medium text-muted-foreground block mb-1">
-              Tipo de Cobrança
+              Forma de Pagamento
             </span>
             <Select
-              value={
-                filters.parcelado === true
-                  ? 'parcelado'
-                  : filters.recorrente === true
-                  ? 'recorrente'
-                  : 'todos'
-              }
-              onValueChange={(v) => {
-                if (v === 'parcelado') {
-                  onChange({ ...filters, parcelado: true, recorrente: undefined });
-                } else if (v === 'recorrente') {
-                  onChange({ ...filters, recorrente: true, parcelado: undefined });
-                } else {
-                  onChange({ ...filters, parcelado: undefined, recorrente: undefined });
-                }
-              }}
+              value={filters.formaPagamento || 'Todas'}
+              onValueChange={handlePaymentMethodChange}
             >
               <SelectTrigger className="h-8 text-xs bg-background border-border text-foreground">
-                <SelectValue placeholder="Todos os tipos" />
+                <SelectValue placeholder="Todas as formas" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
-                <SelectItem value="todos" className="text-xs">Todos os tipos</SelectItem>
-                <SelectItem value="parcelado" className="text-xs">Somente parceladas</SelectItem>
-                <SelectItem value="recorrente" className="text-xs">Somente recorrentes</SelectItem>
+                <SelectItem value="Todas" className="text-xs">
+                  Todas as Formas
+                </SelectItem>
+                <SelectItem value="Boleto" className="text-xs">Boleto</SelectItem>
+                <SelectItem value="Pix" className="text-xs">Pix</SelectItem>
+                <SelectItem value="Cartão de Crédito" className="text-xs">Cartão de Crédito</SelectItem>
+                <SelectItem value="Cartão de Débito" className="text-xs">Cartão de Débito</SelectItem>
+                <SelectItem value="Débito Automático" className="text-xs">Débito Automático</SelectItem>
+                <SelectItem value="Transferência" className="text-xs">Transferência</SelectItem>
+                <SelectItem value="Dinheiro" className="text-xs">Dinheiro</SelectItem>
+                <SelectItem value="Outros" className="text-xs">Outros</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <span className="text-[11px] font-medium text-muted-foreground block mb-1">
-              Ordenar por
+            <span className="text-[11px] font-medium text-muted-foreground block mb-1 flex items-center gap-1">
+              <ArrowUpDown className="size-3" /> Ordenar por
             </span>
             <Select
               value={filters.sortBy || 'vencimento'}
-              onValueChange={(val) =>
-                onChange({
-                  ...filters,
-                  sortBy: val as any,
-                })
-              }
+              onValueChange={(val) => handleSortChange(val as PayableSortBy)}
             >
               <SelectTrigger className="h-8 text-xs bg-background border-border text-foreground">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
-                <SelectItem value="vencimento" className="text-xs">Data de Vencimento</SelectItem>
-                <SelectItem value="valor" className="text-xs">Valor</SelectItem>
-                <SelectItem value="descricao" className="text-xs">Descrição</SelectItem>
-                <SelectItem value="status" className="text-xs">Status</SelectItem>
+                {SORT_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                    {opt.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

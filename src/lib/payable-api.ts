@@ -3,12 +3,12 @@ import {
   PayableFilters,
   PayableFormData,
   PayableSummary,
-  RecurrenceFrequency,
 } from './payable-types';
 
-const STORAGE_KEY = 'arca_payables_v1';
+const STORAGE_KEY = 'arca_monthly_payables_v2';
 
 // Seed initial sample data if localStorage is empty
+// Exclusively fixed, recurring, or installment commitments (NO daily expenses)
 function getInitialPayables(): Payable[] {
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -41,7 +41,7 @@ function getInitialPayables(): Payable[] {
       descricao: 'Energia Elétrica - Enel',
       valor: 18550, // R$ 185,50
       valorPago: 18550,
-      categoria: 'Moradia',
+      categoria: 'Energia',
       dataVencimento: dStr(currentYear, currentMonth, 5),
       dataPagamento: dStr(currentYear, currentMonth, 4),
       formaPagamento: 'Pix',
@@ -55,15 +55,15 @@ function getInitialPayables(): Payable[] {
     {
       id: 'pay-sample-3',
       userId: 1,
-      descricao: 'Internet Fibra 600MB',
-      valor: 12000, // R$ 120,00
-      valorPago: 12000,
-      categoria: 'Assinaturas',
-      dataVencimento: dStr(currentYear, currentMonth, 10),
-      dataPagamento: dStr(currentYear, currentMonth, 10),
+      descricao: 'Água e Saneamento - Sabesp',
+      valor: 9480, // R$ 94,80
+      valorPago: 9480,
+      categoria: 'Água',
+      dataVencimento: dStr(currentYear, currentMonth, 6),
+      dataPagamento: dStr(currentYear, currentMonth, 6),
       formaPagamento: 'Débito Automático',
       status: 'Pago',
-      observacao: 'Todo dia 10 em débito em conta',
+      observacao: 'Débito em conta corrente',
       recorrente: true,
       frequenciaRecorrencia: 'Mensal',
       createdAt: new Date().toISOString(),
@@ -72,26 +72,94 @@ function getInitialPayables(): Payable[] {
     {
       id: 'pay-sample-4',
       userId: 1,
-      descricao: 'Supermercado Mensal',
-      valor: 145000, // R$ 1.450,00
-      valorPago: null,
-      categoria: 'Alimentação',
-      dataVencimento: dStr(currentYear, currentMonth, 1),
-      dataPagamento: null,
-      formaPagamento: 'Cartão de Crédito',
-      status: 'Atrasado',
-      observacao: 'Compras do mês',
+      descricao: 'Internet Fibra 600MB',
+      valor: 12000, // R$ 120,00
+      valorPago: 12000,
+      categoria: 'Internet',
+      dataVencimento: dStr(currentYear, currentMonth, 10),
+      dataPagamento: dStr(currentYear, currentMonth, 9),
+      formaPagamento: 'Débito Automático',
+      status: 'Pago',
+      observacao: 'Plano fibra residencial',
+      recorrente: true,
+      frequenciaRecorrencia: 'Mensal',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
     {
       id: 'pay-sample-5',
       userId: 1,
-      descricao: 'Notebook Dell XPS (1/10)',
-      valor: 85000, // R$ 850,00 da parcela (Total da compra R$ 8.500)
+      descricao: 'Plano Celular Pós 5G',
+      valor: 6990, // R$ 69,90
       valorPago: null,
-      categoria: 'Serviços',
+      categoria: 'Telefone',
+      dataVencimento: dStr(currentYear, currentMonth, 15),
+      dataPagamento: null,
+      formaPagamento: 'Pix',
+      status: 'Pendente',
+      observacao: 'Linha titular Claro',
+      recorrente: true,
+      frequenciaRecorrencia: 'Mensal',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'pay-sample-6',
+      userId: 1,
+      descricao: 'Financiamento Imobiliário Caixa',
+      valor: 165000, // R$ 1.650,00
+      valorPago: null,
+      categoria: 'Financiamento',
       dataVencimento: dStr(currentYear, currentMonth, 20),
+      dataPagamento: null,
+      formaPagamento: 'Débito Automático',
+      status: 'Pendente',
+      observacao: 'Parcela 48 de 360 do imóvel',
+      recorrente: true,
+      frequenciaRecorrencia: 'Mensal',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'pay-sample-7',
+      userId: 1,
+      descricao: 'Seguro Automóvel Porto Seguro',
+      valor: 23500, // R$ 235,00
+      valorPago: null,
+      categoria: 'Seguro',
+      dataVencimento: dStr(currentYear, currentMonth, 22),
+      dataPagamento: null,
+      formaPagamento: 'Cartão de Crédito',
+      status: 'Pendente',
+      observacao: 'Apólice veículo 2026',
+      recorrente: true,
+      frequenciaRecorrencia: 'Mensal',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'pay-sample-8',
+      userId: 1,
+      descricao: 'Fatura Cartão de Crédito',
+      valor: 98000, // R$ 980,00
+      valorPago: null,
+      categoria: 'Cartão',
+      dataVencimento: dStr(currentYear, currentMonth, 2),
+      dataPagamento: null,
+      formaPagamento: 'Pix',
+      status: 'Atrasado',
+      observacao: 'Fatura fechada dia 25',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'pay-sample-9',
+      userId: 1,
+      descricao: 'Notebook Dell XPS (1/10)',
+      valor: 35000, // R$ 350,00 (Total R$ 3.500 em 10x)
+      valorPago: null,
+      categoria: 'Cartão',
+      dataVencimento: dStr(currentYear, currentMonth, 18),
       dataPagamento: null,
       formaPagamento: 'Cartão de Crédito',
       status: 'Pendente',
@@ -99,41 +167,41 @@ function getInitialPayables(): Payable[] {
       parcelado: true,
       parcelaNumero: 1,
       totalParcelas: 10,
-      grupoParcelamentoId: 'grp-notebook-xps',
+      grupoParcelamentoId: 'grp-notebook-dell',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
     {
-      id: 'pay-sample-6',
+      id: 'pay-sample-10',
       userId: 1,
       descricao: 'Notebook Dell XPS (2/10)',
-      valor: 85000, // R$ 850,00 da parcela
+      valor: 35000, // R$ 350,00 da parcela
       valorPago: null,
-      categoria: 'Serviços',
-      dataVencimento: dStr(currentYear, currentMonth + 1, 20),
+      categoria: 'Cartão',
+      dataVencimento: dStr(currentYear, currentMonth + 1, 18),
       dataPagamento: null,
       formaPagamento: 'Cartão de Crédito',
       status: 'Pendente',
-      observacao: 'Segunda parcela',
+      observacao: 'Segunda parcela do notebook',
       parcelado: true,
       parcelaNumero: 2,
       totalParcelas: 10,
-      grupoParcelamentoId: 'grp-notebook-xps',
+      grupoParcelamentoId: 'grp-notebook-dell',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
     {
-      id: 'pay-sample-7',
+      id: 'pay-sample-11',
       userId: 1,
-      descricao: 'Plano de Saúde Familiar',
-      valor: 78000, // R$ 780,00
+      descricao: 'Mensalidade Pós-Graduação',
+      valor: 58000, // R$ 580,00
       valorPago: null,
-      categoria: 'Saúde',
-      dataVencimento: dStr(currentYear, currentMonth, 25),
+      categoria: 'Educação',
+      dataVencimento: dStr(currentYear, currentMonth, 28),
       dataPagamento: null,
       formaPagamento: 'Boleto',
       status: 'Pendente',
-      observacao: 'Mensalidade Unimed',
+      observacao: 'Curso de Especialização',
       recorrente: true,
       frequenciaRecorrencia: 'Mensal',
       createdAt: new Date().toISOString(),
@@ -176,11 +244,11 @@ function normalizeStatus(payable: Payable): Payable {
 }
 
 export async function fetchPayables(filters: PayableFilters = {}): Promise<Payable[]> {
-  await new Promise((res) => setTimeout(res, 100));
+  await new Promise((res) => setTimeout(res, 80));
 
   let items = getStoredData().map(normalizeStatus);
 
-  // Month & Year Filter
+  // Month & Year Filter - STRICTLY filter by month of vencimento
   if (filters.month !== undefined && filters.year !== undefined) {
     items = items.filter((item) => {
       const parts = item.dataVencimento.split('-');
@@ -191,8 +259,26 @@ export async function fetchPayables(filters: PayableFilters = {}): Promise<Payab
     });
   }
 
-  // Status Filter
-  if (filters.status && filters.status !== 'Todos') {
+  // Quick Filter Tabs (Todas, Pendentes, Pagas, Vencidas, Recorrentes, Parceladas)
+  if (filters.quickFilter && filters.quickFilter !== 'Todas') {
+    switch (filters.quickFilter) {
+      case 'Pendentes':
+        items = items.filter((item) => item.status === 'Pendente');
+        break;
+      case 'Pagas':
+        items = items.filter((item) => item.status === 'Pago');
+        break;
+      case 'Vencidas':
+        items = items.filter((item) => item.status === 'Atrasado');
+        break;
+      case 'Recorrentes':
+        items = items.filter((item) => Boolean(item.recorrente));
+        break;
+      case 'Parceladas':
+        items = items.filter((item) => Boolean(item.parcelado));
+        break;
+    }
+  } else if (filters.status && filters.status !== 'Todos') {
     items = items.filter((item) => item.status === filters.status);
   }
 
@@ -210,17 +296,15 @@ export async function fetchPayables(filters: PayableFilters = {}): Promise<Payab
     );
   }
 
-  // Recorrente Filter
-  if (filters.recorrente !== undefined) {
+  // Explicit Recorrente / Parcelado Filter (if set outside quickFilter)
+  if (filters.recorrente !== undefined && !filters.quickFilter) {
     items = items.filter((item) => Boolean(item.recorrente) === filters.recorrente);
   }
-
-  // Parcelado Filter
-  if (filters.parcelado !== undefined) {
+  if (filters.parcelado !== undefined && !filters.quickFilter) {
     items = items.filter((item) => Boolean(item.parcelado) === filters.parcelado);
   }
 
-  // Search Filter
+  // Search Filter (Nome/Descrição, Categoria, Observação)
   if (filters.search && filters.search.trim() !== '') {
     const term = filters.search.toLowerCase().trim();
     items = items.filter(
@@ -237,22 +321,33 @@ export async function fetchPayables(filters: PayableFilters = {}): Promise<Payab
   const sortOrder = filters.sortOrder || 'asc';
 
   items.sort((a, b) => {
-    let comparison = 0;
-    if (sortBy === 'vencimento') {
-      comparison = a.dataVencimento.localeCompare(b.dataVencimento);
-    } else if (sortBy === 'valor') {
-      comparison = a.valor - b.valor;
-    } else if (sortBy === 'descricao') {
-      comparison = a.descricao.localeCompare(b.descricao);
-    } else if (sortBy === 'categoria') {
-      comparison = a.categoria.localeCompare(b.categoria);
-    } else if (sortBy === 'status') {
-      comparison = a.status.localeCompare(b.status);
-    } else if (sortBy === 'formaPagamento') {
-      comparison = a.formaPagamento.localeCompare(b.formaPagamento);
+    switch (sortBy) {
+      case 'vencimento':
+        return a.dataVencimento.localeCompare(b.dataVencimento);
+      case 'vencimento_desc':
+        return b.dataVencimento.localeCompare(a.dataVencimento);
+      case 'valor_desc':
+        return b.valor - a.valor;
+      case 'valor_asc':
+        return a.valor - b.valor;
+      case 'descricao':
+        return a.descricao.localeCompare(b.descricao);
+      case 'recentes':
+        return b.createdAt.localeCompare(a.createdAt);
+      case 'antigas':
+        return a.createdAt.localeCompare(b.createdAt);
+      case 'vencidas_primeiro': {
+        const orderWeight: Record<string, number> = { Atrasado: 0, Pendente: 1, Pago: 2 };
+        const weightA = orderWeight[a.status] ?? 1;
+        const weightB = orderWeight[b.status] ?? 1;
+        if (weightA !== weightB) return weightA - weightB;
+        return a.dataVencimento.localeCompare(b.dataVencimento);
+      }
+      default:
+        return sortOrder === 'asc'
+          ? a.dataVencimento.localeCompare(b.dataVencimento)
+          : b.dataVencimento.localeCompare(a.dataVencimento);
     }
-
-    return sortOrder === 'asc' ? comparison : -comparison;
   });
 
   return items;
@@ -313,17 +408,24 @@ export async function getPayableSummary(month?: number, year?: number): Promise<
 }
 
 export async function createPayable(data: PayableFormData): Promise<Payable[]> {
-  await new Promise((res) => setTimeout(res, 150));
+  await new Promise((res) => setTimeout(res, 120));
 
   const all = getStoredData();
   const nowStr = new Date().toISOString();
   const createdItems: Payable[] = [];
 
-  const isInstallments = Boolean(data.parcelado && (data.totalParcelas || 1) > 1);
-  const totalParcelas = isInstallments ? data.totalParcelas! : 1;
-  const grupoId = isInstallments ? `grp-pay-${Date.now()}-${Math.random().toString(36).substring(2, 7)}` : undefined;
+  const isInstallments =
+    data.accountType === 'parcelada' ||
+    Boolean(data.parcelado && (data.totalParcelas || 1) > 1);
+  const isRecurring =
+    data.accountType === 'recorrente' || (!isInstallments && Boolean(data.recorrente));
 
-  // IMPORTANT: Divide total amount across installments
+  const totalParcelas = isInstallments ? Math.max(2, data.totalParcelas || 2) : 1;
+  const grupoId = isInstallments
+    ? `grp-pay-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
+    : undefined;
+
+  // RULE: Divide total amount across installments without losing cents
   // Ex: Total R$ 1.200 (120000 cents) / 12 = R$ 100 per month (10000 cents)
   const totalCents = data.valor;
   const baseParcelaCents = Math.floor(totalCents / totalParcelas);
@@ -341,7 +443,7 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
 
       // Advance by i months
       const targetDate = new Date(baseYear, baseMonth + i, baseDay);
-      // Handle day mismatch when target month has fewer days (e.g. 31 on Feb)
+      // Handle day mismatch (e.g. day 31 on Feb)
       if (targetDate.getDate() !== baseDay && targetDate.getMonth() !== (baseMonth + i) % 12) {
         targetDate.setDate(0);
       }
@@ -356,7 +458,10 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
         valorPago: i === 0 && data.status === 'Pago' ? valorParcela : null,
         categoria: data.categoria,
         dataVencimento: dataVencimentoIso,
-        dataPagamento: i === 0 && data.status === 'Pago' ? new Date().toISOString().split('T')[0] : null,
+        dataPagamento:
+          i === 0 && data.status === 'Pago'
+            ? new Date().toISOString().split('T')[0]
+            : null,
         formaPagamento: data.formaPagamento,
         status: i === 0 ? data.status : 'Pendente',
         observacao: data.observacao,
@@ -371,24 +476,25 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
 
       createdItems.push(newItem);
     }
-  } else if (data.recorrente && data.frequenciaRecorrencia) {
-    // Generate the first record plus next 5 future occurrences for smooth calendar management
-    const freqCount = data.frequenciaRecorrencia === 'Semanal' ? 8 : data.frequenciaRecorrencia === 'Quinzenal' ? 6 : data.frequenciaRecorrencia === 'Mensal' ? 6 : 2;
+  } else if (isRecurring) {
+    const freq = data.frequenciaRecorrencia || 'Mensal';
+    // Generate the first record plus 11 future occurrences (1 full year)
+    const freqCount = freq === 'Semanal' ? 12 : freq === 'Quinzenal' ? 12 : freq === 'Mensal' ? 12 : 2;
     const recurrenceGroup = `rec-pay-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
     for (let i = 0; i < freqCount; i++) {
       let targetDate = new Date(baseYear, baseMonth, baseDay);
 
-      if (data.frequenciaRecorrencia === 'Semanal') {
+      if (freq === 'Semanal') {
         targetDate.setDate(baseDay + i * 7);
-      } else if (data.frequenciaRecorrencia === 'Quinzenal') {
+      } else if (freq === 'Quinzenal') {
         targetDate.setDate(baseDay + i * 15);
-      } else if (data.frequenciaRecorrencia === 'Mensal') {
+      } else if (freq === 'Mensal') {
         targetDate = new Date(baseYear, baseMonth + i, baseDay);
         if (targetDate.getDate() !== baseDay && targetDate.getMonth() !== (baseMonth + i) % 12) {
           targetDate.setDate(0);
         }
-      } else if (data.frequenciaRecorrencia === 'Anual') {
+      } else if (freq === 'Anual') {
         targetDate = new Date(baseYear + i, baseMonth, baseDay);
       }
 
@@ -402,12 +508,15 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
         valorPago: i === 0 && data.status === 'Pago' ? data.valor : null,
         categoria: data.categoria,
         dataVencimento: dataVencimentoIso,
-        dataPagamento: i === 0 && data.status === 'Pago' ? new Date().toISOString().split('T')[0] : null,
+        dataPagamento:
+          i === 0 && data.status === 'Pago'
+            ? new Date().toISOString().split('T')[0]
+            : null,
         formaPagamento: data.formaPagamento,
         status: i === 0 ? data.status : 'Pendente',
         observacao: data.observacao,
         recorrente: true,
-        frequenciaRecorrencia: data.frequenciaRecorrencia,
+        frequenciaRecorrencia: freq,
         parcelado: false,
         grupoParcelamentoId: recurrenceGroup,
         createdAt: nowStr,
@@ -417,7 +526,7 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
       createdItems.push(newItem);
     }
   } else {
-    // Single normal payable
+    // Single normal payable (exists only in this period)
     const newItem: Payable = {
       id: `pay-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
       userId: 1,
@@ -426,7 +535,10 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
       valorPago: data.status === 'Pago' ? data.valor : null,
       categoria: data.categoria,
       dataVencimento: data.dataVencimento,
-      dataPagamento: data.status === 'Pago' ? (data.dataPagamento || new Date().toISOString().split('T')[0]) : null,
+      dataPagamento:
+        data.status === 'Pago'
+          ? data.dataPagamento || new Date().toISOString().split('T')[0]
+          : null,
       formaPagamento: data.formaPagamento,
       status: data.status,
       observacao: data.observacao,
@@ -445,8 +557,11 @@ export async function createPayable(data: PayableFormData): Promise<Payable[]> {
   return createdItems;
 }
 
-export async function updatePayable(id: string, data: Partial<PayableFormData>): Promise<Payable> {
-  await new Promise((res) => setTimeout(res, 150));
+export async function updatePayable(
+  id: string,
+  data: Partial<PayableFormData>
+): Promise<Payable> {
+  await new Promise((res) => setTimeout(res, 120));
 
   const all = getStoredData();
   const index = all.findIndex((r) => r.id === id);
@@ -457,7 +572,13 @@ export async function updatePayable(id: string, data: Partial<PayableFormData>):
   const current = all[index];
   const updatedItem: Payable = {
     ...current,
-    ...data,
+    descricao: data.descricao ?? current.descricao,
+    valor: data.valor ?? current.valor,
+    categoria: data.categoria ?? current.categoria,
+    dataVencimento: data.dataVencimento ?? current.dataVencimento,
+    formaPagamento: data.formaPagamento ?? current.formaPagamento,
+    status: data.status ?? current.status,
+    observacao: data.observacao ?? current.observacao,
     updatedAt: new Date().toISOString(),
   };
 
@@ -471,7 +592,7 @@ export async function updatePayableAndFuture(
   id: string,
   data: Partial<PayableFormData>
 ): Promise<Payable[]> {
-  await new Promise((res) => setTimeout(res, 200));
+  await new Promise((res) => setTimeout(res, 150));
 
   const all = getStoredData();
   const target = all.find((r) => r.id === id);
@@ -483,14 +604,18 @@ export async function updatePayableAndFuture(
   }
 
   const currentParcela = target.parcelaNumero || 1;
+  const targetDate = target.dataVencimento;
   const updatedList: Payable[] = [];
 
   const newAll = all.map((item) => {
-    if (
-      item.grupoParcelamentoId === target.grupoParcelamentoId &&
-      (item.parcelaNumero || 0) >= currentParcela
-    ) {
-      const newItem: Payable = {
+    // Match parcelamento group OR recurrence group
+    const isSameGroup = item.grupoParcelamentoId === target.grupoParcelamentoId;
+    const isCurrentOrFuture = target.parcelado
+      ? (item.parcelaNumero || 0) >= currentParcela
+      : item.dataVencimento >= targetDate;
+
+    if (isSameGroup && isCurrentOrFuture) {
+      const newItem = {
         ...item,
         categoria: data.categoria ?? item.categoria,
         formaPagamento: data.formaPagamento ?? item.formaPagamento,
@@ -527,29 +652,31 @@ export async function deletePayableAndFuture(id: string): Promise<void> {
   }
 
   const currentParcela = target.parcelaNumero || 1;
-  const filtered = all.filter(
-    (item) =>
-      !(
-        item.grupoParcelamentoId === target.grupoParcelamentoId &&
-        (item.parcelaNumero || 0) >= currentParcela
-      )
-  );
+  const targetDate = target.dataVencimento;
+
+  const filtered = all.filter((item) => {
+    if (item.grupoParcelamentoId !== target.grupoParcelamentoId) return true;
+    if (target.parcelado) {
+      return (item.parcelaNumero || 0) < currentParcela;
+    }
+    return item.dataVencimento < targetDate;
+  });
 
   saveStoredData(filtered);
 }
 
-export async function markAsPaid(id: string, dataPagamento?: string): Promise<Payable> {
-  await new Promise((res) => setTimeout(res, 150));
+export async function markAsPaid(id: string, customDate?: string): Promise<Payable> {
+  await new Promise((res) => setTimeout(res, 120));
 
   const all = getStoredData();
   const index = all.findIndex((r) => r.id === id);
   if (index === -1) throw new Error('Conta a pagar não encontrada');
 
   const current = all[index];
-  // Idempotency check: if already paid, return
+  // Anti-duplication / Idempotence rule: if already 'Pago', do not duplicate
   if (current.status === 'Pago') return current;
 
-  const todayStr = dataPagamento || new Date().toISOString().split('T')[0];
+  const todayStr = customDate || new Date().toISOString().split('T')[0];
   const updatedItem: Payable = {
     ...current,
     status: 'Pago',
@@ -565,7 +692,7 @@ export async function markAsPaid(id: string, dataPagamento?: string): Promise<Pa
 }
 
 export async function duplicatePayable(id: string): Promise<Payable> {
-  await new Promise((res) => setTimeout(res, 150));
+  await new Promise((res) => setTimeout(res, 100));
 
   const all = getStoredData();
   const target = all.find((r) => r.id === id);

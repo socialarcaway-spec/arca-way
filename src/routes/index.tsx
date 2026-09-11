@@ -9,6 +9,8 @@ import {
   Target,
   BarChart3,
   PieChart,
+  ReceiptText,
+  HandCoins,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
@@ -49,6 +51,8 @@ const stats = [
 
 const shortcuts = [
   { icon: Wallet, label: "Contas", to: "/contas" },
+  { icon: ReceiptText, label: "Mensais", to: "/contas-a-pagar" },
+  { icon: HandCoins, label: "A Receber", to: "/contas-a-receber" },
   { icon: CreditCard, label: "Cartões", to: "/cartoes" },
   { icon: ArrowLeftRight, label: "Movimentações", to: "/movimentacoes" },
   { icon: Target, label: "Metas", to: "/metas" },
