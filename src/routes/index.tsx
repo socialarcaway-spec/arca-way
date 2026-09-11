@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Wallet,
   TrendingUp,
@@ -55,12 +55,12 @@ const stats = [
 ];
 
 const shortcuts = [
-  { icon: Wallet, label: "Contas" },
-  { icon: CreditCard, label: "Cartões" },
-  { icon: ArrowLeftRight, label: "Movimentações" },
-  { icon: Target, label: "Metas" },
-  { icon: BarChart3, label: "Fluxo" },
-];
+  { icon: Wallet, label: "Contas", to: "/contas" },
+  { icon: CreditCard, label: "Cartões", to: "/cartoes" },
+  { icon: ArrowLeftRight, label: "Movimentações", to: "/movimentacoes" },
+  { icon: Target, label: "Metas", to: "/metas" },
+  { icon: BarChart3, label: "Fluxo", to: "/fluxo" },
+] as const;
 
 const cashflow = [
   { mes: "abr.", receitas: 0, despesas: 0 },
@@ -73,7 +73,7 @@ const cashflow = [
 
 function Index() {
   return (
-    <main className="min-h-screen bg-background px-4 py-8 font-sans sm:px-8">
+    <main className="px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <p className="text-sm text-muted-foreground">Boa tarde,</p>
         <h1 className="mt-1 text-4xl font-bold tracking-tight text-foreground">Miqueias</h1>
@@ -100,16 +100,17 @@ function Index() {
         </section>
 
         <nav className="mt-5 flex flex-wrap gap-3">
-          {shortcuts.map(({ icon: Icon, label }) => (
-            <button
+          {shortcuts.map(({ icon: Icon, label, to }) => (
+            <Link
               key={label}
+              to={to}
               className="flex w-[86px] flex-col items-center gap-2 rounded-2xl border border-border bg-card px-3 py-4 transition-colors hover:border-primary/50"
             >
               <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
                 <Icon className="size-4" />
               </span>
               <span className="text-[11px] font-medium text-foreground">{label}</span>
-            </button>
+            </Link>
           ))}
         </nav>
 
