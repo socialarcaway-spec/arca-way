@@ -120,8 +120,8 @@ function Index() {
             <p className="mt-1 text-sm text-muted-foreground">
               Receitas vs despesas · últimos 6 meses
             </p>
-            <div className="mt-6 h-[240px]">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="mt-6 w-full">
+              <ResponsiveContainer width="100%" height={240} minWidth={0}>
                 <BarChart data={cashflow} barGap={2}>
                   <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
                   <XAxis
