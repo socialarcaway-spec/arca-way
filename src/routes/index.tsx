@@ -36,18 +36,13 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+import { useAccounts } from "@/hooks/use-accounts";
+
 const brl = (v: number) =>
   `${v < 0 ? "-" : ""}R$ ${Math.abs(v).toLocaleString("pt-BR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-
-const stats = [
-  { icon: Wallet, label: "Saldo total", value: -828.12 },
-  { icon: TrendingUp, label: "Receita do mês", value: 0, active: true },
-  { icon: TrendingDown, label: "Despesa do mês", value: 0, dim: true },
-  { icon: DollarSign, label: "Lucro líquido", value: 0 },
-];
 
 const shortcuts = [
   { icon: Wallet, label: "Contas", to: "/contas" },
@@ -69,6 +64,15 @@ const cashflow = [
 ];
 
 function Index() {
+  const { data: accounts = [] } = useAccounts();
+  const totalBalance = accounts.reduce((acc, a) => acc + (a.saldo || 0), 0) / 100;
+
+  const stats = [
+    { icon: Wallet, label: "Saldo total", value: totalBalance, active: true },
+    { icon: TrendingUp, label: "Receita do mês", value: 0 },
+    { icon: TrendingDown, label: "Despesa do mês", value: 0, dim: true },
+    { icon: DollarSign, label: "Lucro líquido", value: 0 },
+  ];
   return (
     <main className="px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -152,7 +156,7 @@ function Index() {
               <PieChart className="size-4 text-primary" />
               Patrimônio
             </h2>
-            <p className="mt-5 text-3xl font-bold text-foreground">{brl(-828.12)}</p>
+            <p className="mt-5 text-3xl font-bold text-foreground">{brl(totalBalance)}</p>
 
             <ul className="mt-6 space-y-5">
               <li>
@@ -161,7 +165,7 @@ function Index() {
                     <span className="size-2.5 rounded-full bg-primary" />
                     Contas
                   </span>
-                  <span className="font-medium text-foreground">{brl(-828.12)}</span>
+                  <span className="font-medium text-foreground">{brl(totalBalance)}</span>
                 </div>
                 <div className="mt-3 h-[3px] rounded-full bg-primary" />
               </li>
