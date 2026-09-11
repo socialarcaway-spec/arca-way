@@ -1,88 +1,99 @@
 import { Expense, ExpenseFilters } from "./types";
+import {
+  fetchPayables,
+  createPayable,
+  updatePayable,
+  deletePayable,
+  markAsPaid,
+} from "./payable-api";
+import { Payable } from "./payable-types";
 
 export type { Expense };
 
-// Helper to retrieve the bearer token (assumes it is stored in localStorage under 'auth_token')
-function getAuthToken(): string | null {
-  try {
-    return localStorage.getItem("auth_token");
-  } catch {
-    return null;
-  }
-}
+function mapPayableToExpense(p: Payable): Expense {
+  // Generate stable numeric ID from string ID
+  const numericId = Math.abs(
+    p.id.split('').reduce((acc, char) => (acc << 5) - acc + char.charCodeAt(0), 0)
+  ) % 1000000000;
 
-function authHeaders(): HeadersInit {
-  const token = getAuthToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  return {
+    id: numericId,
+    userId: p.userId,
+    descricao: p.descricao,
+    valor: p.valor,
+    categoria: p.categoria,
+    dataVencimento: p.dataVencimento,
+    dataPagamento: p.dataPagamento,
+    status: p.status,
+    recorrente: p.recorrente,
+    parcelaNumero: p.parcelaNumero,
+    totalParcelas: p.totalParcelas,
+    createdAt: p.createdAt,
+    updatedAt: p.updatedAt,
+  };
 }
-
-const API_BASE = (import.meta.env["VITE_API_BASE"] as string | undefined) ?? "/api";
 
 export async function fetchExpenses(filters: ExpenseFilters = {}): Promise<Expense[]> {
-  const params = new URLSearchParams();
-  if (filters.month) params.append("month", String(filters.month));
-  if (filters.year) params.append("year", String(filters.year));
-  if (filters.categoria) params.append("categoria", filters.categoria);
-  if (filters.status) params.append("status", filters.status);
-  if (filters.search) params.append("search", filters.search);
-
-  const response = await fetch(`${API_BASE}/expenses?${params.toString()}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeaders(),
-    },
+  const payables = await fetchPayables({
+    month: filters.month,
+    year: filters.year,
+    categoria: filters.categoria,
+    status: filters.status,
+    search: filters.search,
   });
-  if (!response.ok) {
-    throw new Error("Failed to fetch expenses");
-  }
-  const data = (await response.json()) as Expense[];
-  return data;
+
+  return payables.map(mapPayableToExpense);
 }
 
 export async function createExpense(
   expense: Omit<Expense, "id" | "createdAt" | "updatedAt">,
 ): Promise<Expense> {
-  const response = await fetch(`${API_BASE}/expenses`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeaders(),
-    },
-    body: JSON.stringify(expense),
+  const created = await createPayable({
+    descricao: expense.descricao,
+    valor: expense.valor,
+    categoria: expense.categoria,
+    dataVencimento: expense.dataVencimento,
+    formaPagamento: 'Pix',
+    status: expense.status || 'Pendente',
+    recorrente: expense.recorrente,
+    parcelado: Boolean(expense.totalParcelas && expense.totalParcelas > 1),
+    totalParcelas: expense.totalParcelas,
   });
-  if (!response.ok) {
-    throw new Error("Failed to create expense");
-  }
-  return (await response.json()) as Expense;
+
+  return mapPayableToExpense(created[0]);
 }
 
 export async function updateExpense(
   id: number,
-  expense: Partial<Omit<Expense, "id">>,
+  patch: Partial<Omit<Expense, "id">>,
 ): Promise<Expense> {
-  const response = await fetch(`${API_BASE}/expenses/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeaders(),
-    },
-    body: JSON.stringify(expense),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to update expense");
+  // Find matching payable by mapped id or update by first matching
+  const all = await fetchPayables();
+  const target = all.find((p) => mapPayableToExpense(p).id === id);
+
+  if (!target) {
+    throw new Error(`Expense with id ${id} not found`);
   }
-  return (await response.json()) as Expense;
+
+  if (patch.status === 'Pago') {
+    const updated = await markAsPaid(target.id, patch.dataPagamento ?? undefined);
+    return mapPayableToExpense(updated);
+  }
+
+  const updated = await updatePayable(target.id, {
+    descricao: patch.descricao,
+    valor: patch.valor,
+    categoria: patch.categoria,
+    dataVencimento: patch.dataVencimento,
+  });
+
+  return mapPayableToExpense(updated);
 }
 
 export async function deleteExpense(id: number): Promise<void> {
-  const response = await fetch(`${API_BASE}/expenses/${id}`, {
-    method: "DELETE",
-    headers: {
-      ...authHeaders(),
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to delete expense");
+  const all = await fetchPayables();
+  const target = all.find((p) => mapPayableToExpense(p).id === id);
+  if (target) {
+    await deletePayable(target.id);
   }
 }

@@ -9,11 +9,13 @@ import {
   LineChart,
   FileText,
   Settings,
+  HandCoins,
 } from "lucide-react";
 
 export const navItems = [
   { to: "/", label: "Início", icon: LayoutDashboard },
   { to: "/contas", label: "Contas", icon: Wallet },
+  { to: "/contas-a-receber", label: "Contas a Receber", icon: HandCoins },
   { to: "/cartoes", label: "Cartões", icon: CreditCard },
   { to: "/movimentacoes", label: "Movimentações", icon: ArrowLeftRight },
   { to: "/metas", label: "Metas", icon: Target },

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartoesRouteImport } from './routes/cartoes'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContasRouteImport } from './routes/contas'
+import { Route as ContasAReceberRouteImport } from './routes/contas-a-receber'
 import { Route as DespesasRouteImport } from './routes/despesas'
 import { Route as FluxoRouteImport } from './routes/fluxo'
 import { Route as InvestimentosRouteImport } from './routes/investimentos'
@@ -38,6 +39,11 @@ const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
 const ContasRoute = ContasRouteImport.update({
   id: '/contas',
   path: '/contas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContasAReceberRoute = ContasAReceberRouteImport.update({
+  id: '/contas-a-receber',
+  path: '/contas-a-receber',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DespesasRoute = DespesasRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/cartoes': typeof CartoesRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/contas': typeof ContasRoute
+  '/contas-a-receber': typeof ContasAReceberRoute
   '/despesas': typeof DespesasRoute
   '/fluxo': typeof FluxoRoute
   '/investimentos': typeof InvestimentosRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/cartoes'
     | '/configuracoes'
     | '/contas'
+    | '/contas-a-receber'
     | '/despesas'
     | '/fluxo'
     | '/investimentos'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   CartoesRoute: typeof CartoesRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContasRoute: typeof ContasRoute
+  ContasAReceberRoute: typeof ContasAReceberRoute
   DespesasRoute: typeof DespesasRoute
   FluxoRoute: typeof FluxoRoute
   InvestimentosRoute: typeof InvestimentosRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/contas'
       fullPath: '/contas'
       preLoaderRoute: typeof ContasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contas-a-receber': {
+      id: '/contas-a-receber'
+      path: '/contas-a-receber'
+      fullPath: '/contas-a-receber'
+      preLoaderRoute: typeof ContasAReceberRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/despesas': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartoesRoute: CartoesRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContasRoute: ContasRoute,
+  ContasAReceberRoute: ContasAReceberRoute,
   DespesasRoute: DespesasRoute,
   FluxoRoute: FluxoRoute,
   InvestimentosRoute: InvestimentosRoute,
