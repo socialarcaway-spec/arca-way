@@ -10,14 +10,7 @@ import {
   BarChart3,
   PieChart,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -123,7 +116,11 @@ function Index() {
             <div className="mt-6 w-full">
               <ResponsiveContainer width="100%" height={240} minWidth={0}>
                 <BarChart data={cashflow} barGap={2}>
-                  <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
+                  <CartesianGrid
+                    stroke="var(--color-border)"
+                    strokeDasharray="3 3"
+                    vertical={false}
+                  />
                   <XAxis
                     dataKey="mes"
                     tickLine={false}

@@ -5,9 +5,15 @@ export const Route = createFileRoute("/investimentos")({
   head: () => ({
     meta: [
       { title: "Investimentos | Painel financeiro" },
-      { name: "description", content: "Acompanhe sua carteira de investimentos e a rentabilidade." },
+      {
+        name: "description",
+        content: "Acompanhe sua carteira de investimentos e a rentabilidade.",
+      },
       { property: "og:title", content: "Investimentos | Painel financeiro" },
-      { property: "og:description", content: "Acompanhe sua carteira de investimentos e a rentabilidade." },
+      {
+        property: "og:description",
+        content: "Acompanhe sua carteira de investimentos e a rentabilidade.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

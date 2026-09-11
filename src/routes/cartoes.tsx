@@ -7,7 +7,10 @@ export const Route = createFileRoute("/cartoes")({
       { title: "Cartões | Painel financeiro" },
       { name: "description", content: "Acompanhe faturas, limites e vencimentos dos cartões." },
       { property: "og:title", content: "Cartões | Painel financeiro" },
-      { property: "og:description", content: "Acompanhe faturas, limites e vencimentos dos cartões." },
+      {
+        property: "og:description",
+        content: "Acompanhe faturas, limites e vencimentos dos cartões.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

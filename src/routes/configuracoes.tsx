@@ -7,7 +7,10 @@ export const Route = createFileRoute("/configuracoes")({
       { title: "Configurações | Painel financeiro" },
       { name: "description", content: "Ajuste preferências, moeda e notificações do painel." },
       { property: "og:title", content: "Configurações | Painel financeiro" },
-      { property: "og:description", content: "Ajuste preferências, moeda e notificações do painel." },
+      {
+        property: "og:description",
+        content: "Ajuste preferências, moeda e notificações do painel.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
